@@ -1,4 +1,4 @@
-package motorola.com.kernellogviewer;
+package GestureViewer.com.GestureViewer;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

@@ -1,10 +1,9 @@
-package motorola.com.kernellogviewer;
+package GestureViewer.com.GestureViewer;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -90,16 +89,20 @@ public class MainActivity extends AppCompatActivity {
         String logString;
 
         try {
+            Log.e("a22460", "a22460 dmesg");
             logprocess = Runtime.getRuntime().exec("dmesg");
         } catch (IOException e) {
+            Log.e("a22460", "a22460 dmesg error");
             e.printStackTrace();
         }
 
         try {
             reader = new BufferedReader(new InputStreamReader(
                     logprocess.getInputStream()), 512);
+            Log.e("a22460", "a22460 dmesg reader");
             running = true;
         } catch (IllegalArgumentException e) {
+            Log.e("a22460", "a22460 dmesg reader error");
             e.printStackTrace();
         }
 
@@ -108,12 +111,16 @@ public class MainActivity extends AppCompatActivity {
         try {
             while (running) {
                 logString = reader.readLine();
+                Log.e("a22460", "a22460 dmesg logString" + logString);
 
                 if (logString != null) {
-                    if (logString.contains("a22460")) {
-                        logString = logString.substring(43);
+                    //if (logString.contains("#v")) {
+                    // Affinity
+                    //logString = logString.substring(45);
+                    // Clark
+                    logString = logString.substring(45);
                         adaptor.add(logString);
-                    }
+                    //}
                 } else {
                     // read out all dmesg,stop
                     Log.d("a22460", "a22460 Logview - stop");
@@ -170,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://motorola.com.kernellogviewer/http/host/path")
+                Uri.parse("android-app://motorola.com.com.motorola.a22460.GestureViewer/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
     }
@@ -189,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://motorola.com.kernellogviewer/http/host/path")
+                Uri.parse("android-app://motorola.com.com.motorola.a22460.GestureViewer/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
@@ -205,10 +212,8 @@ public class MainActivity extends AppCompatActivity {
             color = Color.rgb(128, 0, 0);
         } else if (type.equals("E")) {
             color = Color.rgb(255, 0, 0);
-            ;
         } else if (type.equals("I")) {
             color = Color.rgb(0, 128, 0);
-            ;
         }
 
         return color;
@@ -250,104 +255,14 @@ public class MainActivity extends AppCompatActivity {
 
             if (null != data) {
                 TextView textview = (TextView) view.findViewById(R.id.txtLogString);
-                String type = data.substring(0, 1);
-                String line = data.substring(2);
+                String type = data.substring(7, 8);
+                String line = data.substring(0, 5) + data.substring(9);
 
                 textview.setText(line);
                 textview.setTextColor(getLogColor(type));
             }
 
             return view;
-        }
-    }
-
-    private class LogReaderTask extends AsyncTask<Void, String, Void> {
-        private final String[] LOGCAT_CMD = new String[]{"dmesg"};
-        private final int BUFFER_SIZE = 1024;
-
-        private boolean isRunning = true;
-        private Process logprocess = null;
-        private BufferedReader reader = null;
-        private String logString;
-        //private String[] line = null;
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                logprocess = Runtime.getRuntime().exec(LOGCAT_CMD);
-            } catch (IOException e) {
-                e.printStackTrace();
-
-                isRunning = false;
-            }
-
-            try {
-                reader = new BufferedReader(new InputStreamReader(
-                        logprocess.getInputStream()), BUFFER_SIZE);
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-
-                isRunning = false;
-            }
-
-            //line = new String[1];
-
-            try {
-                while (isRunning) {
-                    logString = reader.readLine();
-
-                    if (logString != null) {
-                        if (logString.contains("a22460")) {
-                            logString = logString.substring(43);
-                            adaptor.add(logString);
-                        }
-                    } else {
-                        // read out all dmesg,stop
-                        Log.d("a22460", "a22460 Logview - stop");
-                        isRunning = false;
-
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                listView.setSelection(adaptor.getCount() - 1);
-                            }
-                        });
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-
-                isRunning = false;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-        }
-
-//        @Override
-//        protected void onProgressUpdate(String... values) {
-//            super.onProgressUpdate(values);
-//
-//            adaptor.add(values[0]);
-//            Log.d("a22460", "a22460 " + values[0]);
-//        }
-
-        public void stopTask() {
-            isRunning = false;
-            logprocess.destroy();
         }
     }
 }

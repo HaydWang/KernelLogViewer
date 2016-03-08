@@ -1,4 +1,4 @@
-package motorola.com.kernellogviewer;
+package GestureViewer.com.GestureViewer;
 
 import org.junit.Test;
 

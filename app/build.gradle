@@ -5,7 +5,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "motorola.com.kernellogviewer"
+        applicationId "motorola.com.com.motorola.a22460.GestureViewer"
         minSdkVersion 23
         targetSdkVersion 23
         versionCode 1
